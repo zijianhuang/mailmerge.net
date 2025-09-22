@@ -8,7 +8,7 @@
 		<Description>MailSender and MailQueue based on MailKit. Console app BulkMailMerge for bulk Email merge is based on this component.</Description>
 		<PackageReleaseNotes>.NET 9</PackageReleaseNotes>
 		<NeutralLanguage>en</NeutralLanguage>
-		<PackageProjectUrl>https://github.com/zijianhuang/bulkmailmerge</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/zijianhuang/mailmerge.net</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
