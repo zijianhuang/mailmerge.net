@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Fonlow.Mail;
+using MailKit;
+using MailKit.Net.Smtp;
+using MailUnitTests;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using MimeKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Fonlow.Mail;
 using Xunit;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using MailKit.Net.Smtp;
-using MailKit;
-using MimeKit;
 
 namespace MailUnitTests
 {
@@ -87,9 +90,9 @@ namespace MailUnitTests
 		public async Task TestSendThrow()
 		{
 			SmtpSection smtpSection = new SmtpSection(config);
-			smtpSection.Password = "XXX"+ smtpSection.Password;
+			smtpSection.Password = "XXX" + smtpSection.Password;
 			//smtpSection.Host = "kkkkk";
-			MailSender mySender = new MailSender(smtpSection);
+			MailSender mySender = new MailSender(smtpSection, Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
 
 			MimeMessage message = new MimeMessage
 			{
@@ -121,7 +124,7 @@ namespace MailUnitTests
 			SmtpSection smtpSection = new SmtpSection(config);
 			smtpSection.Password = "XXX" + smtpSection.Password;
 			//smtpSection.Host = "kkkkk";
-			MailSender mySender = new MailSender(smtpSection);
+			MailSender mySender = new MailSender(smtpSection, Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
 
 			MimeMessage message = new MimeMessage
 			{
@@ -152,9 +155,10 @@ public class MailFixture
 		//.AddJsonFile("appsettings.json")
 		//.Build());
 
-		Config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+		Config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddUserSecrets(typeof(MailTests).Assembly).Build();
 
 		services.AddSingleton<IConfiguration>(provider => Config)
+			.AddSingleton(typeof(ILogger<EmailTrace>), typeof(NullLogger<EmailTrace>))
 			.AddSingleton<SmtpSection>()
 			.AddSingleton<MailSender>()
 			.AddSingleton<MailQueue>();

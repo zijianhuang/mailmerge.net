@@ -7,6 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fonlow.Mail", "Fonlow.Mail\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail2Tests", "Tests\Mail2Tests\Mail2Tests.csproj", "{45819471-1A47-4179-B523-7CB9AA32CAD6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		BuildRelease.ps1 = BuildRelease.ps1
+		DotNetPack.ps1 = DotNetPack.ps1
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkMailMerge", "BulkMailMerge\BulkMailMerge.csproj", "{9B34600A-B450-FC34-2F0B-487B3E9255C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +30,15 @@ Global
 		{45819471-1A47-4179-B523-7CB9AA32CAD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45819471-1A47-4179-B523-7CB9AA32CAD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45819471-1A47-4179-B523-7CB9AA32CAD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B34600A-B450-FC34-2F0B-487B3E9255C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B34600A-B450-FC34-2F0B-487B3E9255C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B34600A-B450-FC34-2F0B-487B3E9255C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B34600A-B450-FC34-2F0B-487B3E9255C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16A01739-A2FC-40EA-AE1D-8C09DF56E472}
 	EndGlobalSection
 EndGlobal

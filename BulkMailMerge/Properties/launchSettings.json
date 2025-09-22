@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BulkMailMerge": {
+      "commandName": "Project",
+      "commandLineArgs": " /CL=abcde"
+    }
+  }
+}
