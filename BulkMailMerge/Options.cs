@@ -12,11 +12,8 @@ namespace BulkMailMerge
         [CommandLineOption(Aliases = "CF", Description = "List of Email addresses line by line, e.g., /CF=EmailAddresses.txt . Optional if mail merge is utilized. If CL is also not declared, Email addresses in data file will be used.")]
         public string ContactFile { get; set; }
 
-        [CommandLineOption(Aliases = "SF", Description = "Email subject in file, e.g., /SF=subject.txt.")]
+        [CommandLineOption(Aliases = "SF", Description = "Email subject or template in text file, e.g., /SF=subject.txt.")]
         public string SubjectFile { get; set; }
-
-        //[CommandLineOption(Aliases = "B", Description = "Email body, e.g., /B='Something to say'")]
-        //public string Body { get; set; }
 
         [CommandLineOption(Aliases = "BF", Description = "Email body or template in text file, e.g., /BF=body.html . If the file ext is html or htm, the Email will be in HTML format, otherwise, plain text.")]
         public string BodyFile { get; set; }

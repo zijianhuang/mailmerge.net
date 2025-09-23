@@ -16,7 +16,7 @@ BulkMailMerge  version 1.1.0.0
                        declared, Email addresses in data file will be used.
    /ContactFile, /CF   List of Email addresses line by line, e.g., /CF=EmailAddresses.txt . Optional if mail merge is
                        utilized. If CL is also not declared, Email addresses in data file will be used.
-   /SubjectFile, /SF   Email subject in file, e.g., /SF=subject.txt.
+   /SubjectFile, /SF   Email subject or template in text file, e.g., /SF=subject.txt.
    /BodyFile, /BF      Email body or template in text file, e.g., /BF=body.html . If the file ext is html or htm, the
                        Email will be in HTML format, otherwise, plain text.
    /DataFile, /DF      CSV or array of JSON data in text file to merge with the body template, e.g., /DF=data.json or
@@ -52,7 +52,6 @@ BulkMailMerge.exe /CF=Profiles/ProductUpdate/ContactList.txt /SF=Profiles/Produc
             "enableTls": true
         }
     }
-
 }
 ```
 

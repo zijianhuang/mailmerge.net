@@ -1,4 +1,4 @@
-cd $PSScriptRoot
+Set-Location $PSScriptRoot
 $target="../Release/BulkMailMerge/Win"
 
 Remove-Item -Recurse $target*
