@@ -116,6 +116,9 @@ If the HTML body should has media like images, the images had better be presente
 
 If the same image like icon is presented multiple times, the embedded resources could be stored in the embedded stylesheet.
 
+### References
+* [The Ultimate Guide to Web Safe Fonts for Email Marketing](https://www.litmus.com/blog/the-ultimate-guide-to-web-fonts)
+
 ## Limitations of the App
 
 This is a lightweight mass Email application, not like other commercial mass Email services which provide rich "value added" services that you may or may not need. There is no comprehensive monitoring, recovery and analytical features etc.

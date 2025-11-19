@@ -142,7 +142,7 @@ namespace Fonlow.Mail
 			if (!smtpClient.IsConnected)
 			{
 				logger.LogDebug("SmtpClient Connecting...");
-				await smtpClient.ConnectAsync(smtpSection.Host, smtpSection.Port, SecureSocketOptions.StartTls).ConfigureAwait(false);
+				await smtpClient.ConnectAsync(smtpSection.Host, smtpSection.Port, options).ConfigureAwait(false);
 				logger.LogDebug("SmtpClient Connected.");
 			}
 
