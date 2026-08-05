@@ -1,1 +1,1 @@
-﻿dotnet build FonlowMail.sln  --configuration Release --no-incremental
+﻿dotnet build FonlowMail.slnx  --configuration Release --no-incremental

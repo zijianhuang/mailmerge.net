@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="BuildRelease.ps1" />
+    <File Path="DotNetPack.ps1" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="BulkMailMerge/BulkMailMerge.csproj" />
+  <Project Path="Fonlow.Mail/Fonlow.Mail.csproj" />
+  <Project Path="Tests/Mail2Tests/Mail2Tests.csproj" />
+</Solution>
