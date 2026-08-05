@@ -2,7 +2,10 @@
   "profiles": {
     "BulkMailMerge": {
       "commandName": "Project",
-      "commandLineArgs": " /CL=abcde"
+      "commandLineArgs": " /CL=abcde",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
     }
   }
 }

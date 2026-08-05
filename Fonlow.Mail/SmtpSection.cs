@@ -92,5 +92,9 @@ namespace Fonlow.Mail
         public bool EnableSsl { get; set; }
         public bool EnableTls { get; set; }
 
-    }
+        /// <summary>
+        /// If declared, protocol log will be available.
+        /// </summary>
+        public string ProtocolLogFile { get; set; }
+	}
 }

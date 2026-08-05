@@ -16,4 +16,6 @@ When testing Mail2Tests and BulkMailMerge.exe, please setup SMTP credentials in 
 <UserSecretsId>Fonlow.Mail2Tests20221223</UserSecretsId>
 ```
 
-.NEt runtime will use the key values in `Secret.json` to overwrite the ones in `appsettings.json`.
+.NET runtime may use the key values of [app secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) in a folder like C:\Users\YourProfile\AppData\Roaming\Microsoft\UserSecrets\Fonlow.Mail2Tests20221223 `Secret.json` to overwrite the ones in `appsettings.json`.
+
+The release build of BulkMailMerge.exe will not use app secrets but only appsettings.json.

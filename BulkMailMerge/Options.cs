@@ -33,5 +33,11 @@ namespace BulkMailMerge
             get;
             set;
         }
+
+		[CommandLineOption(Aliases = "pl", Name = "ProtocolLog", Description = "Protocol log file for diagnostic purposes at the protocol level. If declared, it overrides what is defined in the configuration file appsettings.json.")]
+		public string ProtocolLogFile
+        {
+            get; set;
+        }
     }
 }

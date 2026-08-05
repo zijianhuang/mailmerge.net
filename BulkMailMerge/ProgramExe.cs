@@ -19,12 +19,20 @@ namespace BulkMailMerge
 
 		public ErrorCode Execute()
 		{
-			var config = new ConfigurationBuilder()
-				.AddJsonFile("appsettings.json", false, true)
-				.AddUserSecrets(typeof(ProgramExe).Assembly)
-				.Build();
+			var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
+			var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"); // declared in launchSettings.json
+			if (env == "Development")
+			{
+				configBuilder.AddUserSecrets(typeof(ProgramExe).Assembly); // so to override what in appsettings.json
+			}
 
+			var config = configBuilder.Build();
 			var smtpSection = new SmtpSection(config);
+			if (!string.IsNullOrEmpty(options.ProtocolLogFile)) // override the ProtocolLogFile if defined in command line options
+			{
+				smtpSection.ProtocolLogFile = options.ProtocolLogFile;
+			}
+
 			var mailSender = new MailSender(smtpSection, logger);
 			var mailQueue = new MailQueue(mailSender, logger);
 			mailQueue.DownToZero += MailQueue_DownToZero;
@@ -33,6 +41,7 @@ namespace BulkMailMerge
 				errorMessagesList.Add(msg);
 			};
 
+			logger.LogInformation($"SMTP Host: {smtpSection.Host}, Port: {smtpSection.Port}, From: {smtpSection.From}, User: {smtpSection.Username}");
 			logger.LogInformation("Reading Email address list...");
 			string[] contactList = [];
 			JsonArray jsonDataArray = null;

@@ -26,7 +26,12 @@ namespace Fonlow.Mail
 		{
 			this.logger = logger;
 			this.smtpSection = smtpSection;
-			this.smtpClient = new SmtpClient();
+			if (!string.IsNullOrEmpty(smtpSection.ProtocolLogFile))
+			{
+				protocolLogger = new ProtocolLogger(smtpSection.ProtocolLogFile);
+			}
+			this.smtpClient = protocolLogger == null ? new SmtpClient() : new SmtpClient(protocolLogger);
+
 			smtpClient.Disconnected += (object sender, DisconnectedEventArgs e) =>
 			{
 				logger.LogInformation("SmtpClient Disconnected");
@@ -37,7 +42,12 @@ namespace Fonlow.Mail
 		{
 			this.logger = logger;
 			this.smtpSection = smtpSection;
-			this.smtpClient = new SmtpClient();
+			if (!string.IsNullOrEmpty(smtpSection.ProtocolLogFile))
+			{
+				protocolLogger = new ProtocolLogger(smtpSection.ProtocolLogFile);
+			}
+			this.smtpClient = protocolLogger == null ? new SmtpClient() : new SmtpClient(protocolLogger);
+
 			smtpClient.Disconnected += (object sender, DisconnectedEventArgs e) =>
 			{
 				logger.LogInformation("SmtpClient Disconnected");
@@ -48,6 +58,7 @@ namespace Fonlow.Mail
 		readonly ILogger logger;
 		readonly SmtpClient smtpClient;
 		readonly SemaphoreSlim smtpClientLock = new SemaphoreSlim(1, 1);
+		readonly ProtocolLogger protocolLogger;
 
 		/// <summary>
 		/// Connect to Email server, authenticate, send, then dispose message.
@@ -131,12 +142,12 @@ namespace Fonlow.Mail
 			SecureSocketOptions options = SecureSocketOptions.None;
 			if (smtpSection.EnableSsl)
 			{
-				options |= SecureSocketOptions.SslOnConnect;
+				options = SecureSocketOptions.SslOnConnect;
 			}
 
 			if (smtpSection.EnableTls)
 			{
-				options |= SecureSocketOptions.StartTls;
+				options = SecureSocketOptions.StartTls;
 			}
 
 			if (!smtpClient.IsConnected)
@@ -170,6 +181,8 @@ namespace Fonlow.Mail
 				if (disposing)
 				{
 					smtpClient.Dispose();
+					protocolLogger?.Dispose();
+					smtpClientLock?.Dispose();
 				}
 
 				disposed = true;

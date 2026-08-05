@@ -146,10 +146,6 @@ public class MailFixture
 	public MailFixture()
 	{
 		ServiceCollection services = new ServiceCollection();
-		//  var config = services.Configure<IConfiguration>(new ConfigurationBuilder()
-		//.AddJsonFile("appsettings.json")
-		//.Build());
-
 		Config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddUserSecrets(typeof(MailTests).Assembly).Build();
 
 		services.AddSingleton<IConfiguration>(provider => Config)
