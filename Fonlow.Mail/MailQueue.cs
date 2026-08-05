@@ -16,12 +16,8 @@ namespace Fonlow.Mail
     public sealed class MailQueue : IDisposable
     {
         readonly ConcurrentQueue<MimeMessage> pendingQueue;
-        public MailQueue(MailSender sender, ILogger<EmailTrace> logger)
+        public MailQueue(MailSender sender, ILogger<EmailTrace> logger) :this(sender, logger as ILogger)
         {
-            this.logger = logger;
-            this.mailSender = sender;
-            pendingQueue = new ConcurrentQueue<MimeMessage>();
-            timer = new Timer(TimerCallback, null, 1000, Timeout.Infinite);
         }
 
         public MailQueue(MailSender sender, ILogger logger)

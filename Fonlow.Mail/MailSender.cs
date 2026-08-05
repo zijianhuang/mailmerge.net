@@ -22,20 +22,8 @@ namespace Fonlow.Mail
 	/// </summary>
 	public class MailSender : IDisposable
 	{
-		public MailSender(SmtpSection smtpSection, ILogger<EmailTrace> logger)
+		public MailSender(SmtpSection smtpSection, ILogger<EmailTrace> logger) : this(smtpSection, logger as ILogger)
 		{
-			this.logger = logger;
-			this.smtpSection = smtpSection;
-			if (!string.IsNullOrEmpty(smtpSection.ProtocolLogFile))
-			{
-				protocolLogger = new ProtocolLogger(smtpSection.ProtocolLogFile);
-			}
-			this.smtpClient = protocolLogger == null ? new SmtpClient() : new SmtpClient(protocolLogger);
-
-			smtpClient.Disconnected += (object sender, DisconnectedEventArgs e) =>
-			{
-				logger.LogInformation("SmtpClient Disconnected");
-			};
 		}
 
 		public MailSender(SmtpSection smtpSection, ILogger logger)
