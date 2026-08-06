@@ -18,4 +18,9 @@ When testing Mail2Tests and BulkMailMerge.exe, please setup SMTP credentials in 
 
 .NET runtime may use the key values of [app secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) in a folder like C:\Users\YourProfile\AppData\Roaming\Microsoft\UserSecrets\Fonlow.Mail2Tests20221223 `Secret.json` to overwrite the ones in `appsettings.json`.
 
-The release build of BulkMailMerge.exe will not use app secrets but only appsettings.json.
+For testing BulkMailMerge.exe, run "dotnet run" in the project folder to ensure DOTNET_ENVIRONMENT=Development as declared in launchSettings.json. For example:
+```ps1
+dotnet run -- /CL=somebody1234@gmail.com -- /pl=c:/temp/protocol.log
+```
+
+For testing Mail2Tests, by default it will use app secrets.

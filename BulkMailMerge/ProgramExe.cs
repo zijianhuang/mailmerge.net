@@ -1,8 +1,9 @@
-﻿using System.Text.Json.Nodes;
+﻿using DnsClient;
 using Fonlow.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using System.Text.Json.Nodes;
 
 namespace BulkMailMerge
 {
@@ -130,7 +131,7 @@ namespace BulkMailMerge
 					var invalidAddresses = ValidateEmailAddresses(contactList);
 					if (invalidAddresses.Length > 0)
 					{
-						Console.WriteLine("The following Email addresses in contact list or data are in invalid format:");
+						Console.WriteLine("The following Email addresses in contact list or data are in invalid format or without MX records:");
 						foreach (var item in invalidAddresses)
 						{
 							Console.WriteLine($"Item {item.Item1}: {item.Item2}");
@@ -253,10 +254,24 @@ namespace BulkMailMerge
 					ss.Add(Tuple.Create(lineNum, a));
 				}
 
+				var hasMx = HasMxRecordAsync(a).GetAwaiter().GetResult();
+				if (!hasMx)
+				{
+					ss.Add(Tuple.Create(lineNum, a));
+				}
+
 				lineNum++;
 			}
 
 			return [.. ss];
+		}
+
+		static async Task<bool> HasMxRecordAsync(string email)
+		{
+			var domain = email.Split('@').Last();
+			var lookup = new LookupClient();
+			var result = await lookup.QueryAsync(domain, QueryType.MX);
+			return result.Answers.MxRecords().Any();
 		}
 
 	}
