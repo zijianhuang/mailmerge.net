@@ -34,17 +34,24 @@ namespace Fonlow.Mail
 			{
 				protocolLogger = new ProtocolLogger(smtpSection.ProtocolLogFile);
 			}
-			this.smtpClient = protocolLogger == null ? new SmtpClient() : new SmtpClient(protocolLogger);
 
-			smtpClient.Disconnected += (object sender, DisconnectedEventArgs e) =>
-			{
-				logger.LogInformation("SmtpClient Disconnected");
-			};
+			CreateSmtpClient();
 		}
 
-		readonly SmtpSection smtpSection;
+		void CreateSmtpClient()
+		{
+			smtpClient?.Dispose();
+            this.smtpClient = protocolLogger == null ? new SmtpClient() : new SmtpClient(protocolLogger);
+
+            smtpClient.Disconnected += (object sender, DisconnectedEventArgs e) =>
+            {
+                logger.LogInformation("SmtpClient Disconnected");
+            };
+        }
+
+        readonly SmtpSection smtpSection;
 		readonly ILogger logger;
-		readonly SmtpClient smtpClient;
+		SmtpClient smtpClient;
 		readonly SemaphoreSlim smtpClientLock = new SemaphoreSlim(1, 1);
 		readonly ProtocolLogger protocolLogger;
 
@@ -108,6 +115,30 @@ namespace Fonlow.Mail
 			{
 				logger.LogError(ex.Message);
 				throw;
+			}
+			catch (System.Net.Sockets.SocketException ex)
+			{
+				if (ex.ErrorCode == 10054) // exception message: "An existing connection was forcibly closed by the remote host"
+                {
+					logger.LogError("SocketException 10054: Connection reset by peer. Try to reconnect and send again using new SmtpClient.");
+					CreateSmtpClient();
+					await EnsureSmtpClientAuthenticated().ConfigureAwait(false);
+					if (!resendOnce)
+					{
+						logger.LogInformation("Try sending mail once again after reconnecting and authentication...");
+						resendOnce = true;
+						return await SendMessageAsync().ConfigureAwait(false);
+					}
+					else
+					{
+						return "Failed to send even after resend once with new client.";
+					}
+				}
+				else
+				{
+					logger.LogError(ex.ToString());
+					throw;
+				}
 			}
 			catch (Exception ex)
 			{
