@@ -4,7 +4,9 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,7 +82,33 @@ namespace Fonlow.Mail
 
 			await smtpClientLock.WaitAsync().ConfigureAwait(false);
 			var resendOnce = false;
-			try
+
+            async Task<Tuple<bool, string>> HandleSocketException10054(SocketException ex)
+            {
+                if (ex.ErrorCode == 10054) // exception message: "An existing connection was forcibly closed by the remote host"
+                {
+                    logger.LogError("SocketException 10054: Connection reset by peer. Try to reconnect and send again using new SmtpClient.");
+                    CreateSmtpClient();
+                    await EnsureSmtpClientAuthenticated().ConfigureAwait(false);
+                    if (!resendOnce)
+                    {
+                        logger.LogInformation("Try sending mail once again after reconnecting and authentication...");
+                        resendOnce = true;
+                        return Tuple.Create(true, await SendMessageAsync().ConfigureAwait(false));
+                    }
+                    else
+                    {
+                        return  Tuple.Create(true, "Failed to send even after resend once with new client.");
+                    }
+                }
+                else
+                {
+                    logger.LogError(ex.ToString());
+                    return Tuple.Create(false, string.Empty);
+                }
+            }
+
+            try
 			{
 				await EnsureSmtpClientAuthenticated().ConfigureAwait(false);
 				return await SendMessageAsync().ConfigureAwait(false);
@@ -118,28 +146,27 @@ namespace Fonlow.Mail
 			}
 			catch (System.Net.Sockets.SocketException ex)
 			{
-				if (ex.ErrorCode == 10054) // exception message: "An existing connection was forcibly closed by the remote host"
-                {
-					logger.LogError("SocketException 10054: Connection reset by peer. Try to reconnect and send again using new SmtpClient.");
-					CreateSmtpClient();
-					await EnsureSmtpClientAuthenticated().ConfigureAwait(false);
-					if (!resendOnce)
-					{
-						logger.LogInformation("Try sending mail once again after reconnecting and authentication...");
-						resendOnce = true;
-						return await SendMessageAsync().ConfigureAwait(false);
-					}
-					else
-					{
-						return "Failed to send even after resend once with new client.";
-					}
-				}
-				else
+				var rr = await HandleSocketException10054(ex).ConfigureAwait(false);
+				if (rr.Item1)
 				{
-					logger.LogError(ex.ToString());
-					throw;
+					return rr.Item2;
 				}
-			}
+
+				throw;
+            }
+			catch (IOException ex)
+			{
+                if (ex.InnerException is SocketException socketEx)
+                {
+                    var rr = await HandleSocketException10054(socketEx).ConfigureAwait(false);
+                    if (rr.Item1)
+                    {
+                        return rr.Item2;
+                    }
+                }
+ 
+				throw;
+            }
 			catch (Exception ex)
 			{
 				logger.LogError($"{ex.GetType().FullName} ~ {ex}");
