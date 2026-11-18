@@ -77,7 +77,7 @@ namespace Fonlow.Mail
 				logger.LogInformation("Sending Email {Subject} to {Recipient}", message.Subject, string.Join("; ", message.To.Mailboxes.Select(d => string.IsNullOrEmpty(d.Name) ? d.Address : $"{d.Name} <{d.Address}>")));
 				var r = await smtpClient.SendAsync(message).ConfigureAwait(false);
 				logger.LogInformation("Sent Email {Subject}", message.Subject);
-				return r;
+				return r.ResponseText;
 			}
 
 			await smtpClientLock.WaitAsync().ConfigureAwait(false);
